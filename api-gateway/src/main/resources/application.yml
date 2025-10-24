@@ -1,0 +1,48 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    gateway:
+      default-filters:
+        - PreserveHostHeader
+        - AddResponseHeader=X-Gateway, api-gateway
+      routes:
+        - id: hotel-service
+          uri: lb://hotel-service
+          predicates:
+            - Path=/hotels/**
+          filters:
+            - RemoveRequestHeader=Cookie
+        - id: booking-service
+          uri: lb://booking-service
+          predicates:
+            - Path=/bookings/**, /auth/**
+          filters:
+            - RemoveRequestHeader=Cookie
+    discovery:
+      locator:
+        enabled: true
+        lower-case-service-id: true
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+springdoc:
+  swagger-ui:
+    urls:
+      - name: booking-service
+        url: /bookings/v3/api-docs
+      - name: hotel-service
+        url: /hotels/v3/api-docs
+
