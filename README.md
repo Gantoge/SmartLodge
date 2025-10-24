@@ -46,7 +46,7 @@
    mvn -pl eureka-server spring-boot:run
 Запустить API Gateway
 
-bash
+```bash
 Копировать код
 mvn -pl api-gateway spring-boot:run
 Запустить Hotel и Booking Service (в отдельных терминалах)
