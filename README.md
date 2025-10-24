@@ -51,7 +51,7 @@
 mvn -pl api-gateway spring-boot:run
 Запустить Hotel и Booking Service (в отдельных терминалах)
 
-bash
+```bash
 Копировать код
 mvn -pl hotel-service spring-boot:run
 mvn -pl booking-service spring-boot:run
