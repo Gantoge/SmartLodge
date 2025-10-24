@@ -80,32 +80,38 @@ mvn -pl booking-service spring-boot:run
 curl -X POST http://localhost:8080/auth/register \
   -H 'Content-Type: application/json' \
   -d '{"username":"user1","password":"pass"}'
-  2. Вход и получение JWT
+
+### 2. Вход и получение JWT
+```bash
 TOKEN=$(curl -s -X POST http://localhost:8080/auth/login \
   -H 'Content-Type: application/json' \
   -d '{"username":"user1","password":"pass"}' | jq -r .access_token)
 
-3. Создание отеля и номера (для администратора)
+### 3. Создание отеля и номера (для администратора)
+```bash
 curl -X POST http://localhost:8080/hotels \
   -H "Authorization: Bearer $TOKEN" \
   -H 'Content-Type: application/json' \
   -d '{"name":"Hotel A","city":"Moscow","address":"Red Square, 1"}'
-
+```bash
 curl -X POST http://localhost:8080/rooms \
   -H "Authorization: Bearer $TOKEN" \
   -H 'Content-Type: application/json' \
   -d '{"number":"101","capacity":2,"available":true}'
 
-4. Получение подсказок по номерам
+### 4. Получение подсказок по номерам
+```bash
 curl -H "Authorization: Bearer $TOKEN" http://localhost:8080/bookings/suggestions
 
-5. Создание бронирования (с requestId)
+### 5. Создание бронирования (с requestId)
+```bash
 curl -X POST http://localhost:8080/bookings \
   -H "Authorization: Bearer $TOKEN" \
   -H 'Content-Type: application/json' \
   -d '{"roomId":1,"startDate":"2025-10-20","endDate":"2025-10-22","requestId":"req-123"}'
 
-6. Просмотр истории бронирований
+### 6. Просмотр истории бронирований
+```bash
 curl -H "Authorization: Bearer $TOKEN" http://localhost:8080/bookings
 
 🧭 Основные эндпойнты (через Gateway)
@@ -120,12 +126,14 @@ POST	/bookings	Создание бронирования (PENDING → CONFIRMED 
 GET	/bookings/suggestions	Подсказки по номерам
 GET	/bookings/all	Все бронирования (для администратора)
 👥 Пользователи (Booking, admin)
+```bash
 GET /admin/users
 GET /admin/users/{id}
 PUT /admin/users/{id}
 DELETE /admin/users/{id}
 
 🏨 Отели и номера (Hotel)
+
 Метод	Эндпойнт	Описание
 GET	/hotels, /hotels/{id}	Просмотр отелей
 POST/PUT/DELETE	/hotels, /hotels/{id}	CRUD для администратора
@@ -135,6 +143,7 @@ POST	/rooms/{id}/hold	Удержание номера (по requestId)
 POST	/rooms/{id}/confirm	Подтверждение удержания
 POST	/rooms/{id}/release	Освобождение номера (компенсация)
 📊 Статистика
+```bash
 GET /stats/rooms/popular — статистика популярности номеров
 
 🔁 Согласованность и надёжность
@@ -142,7 +151,7 @@ GET /stats/rooms/popular — статистика популярности но�
 Локальные транзакции внутри сервисов (@Transactional)
 
 Двухшаговая логика бронирования:
-
+```sql
 PENDING → (hold в Hotel) → CONFIRM → CONFIRMED
 при сбое → RELEASE + CANCELLED
 
@@ -183,7 +192,7 @@ HotelHttpIT#adminCanCreateHotel — проверка CRUD
 HotelAvailabilityTests, HotelMoreTests — статистика и занятость
 
 Запуск всех тестов:
-
+```bash
 mvn -q -DskipTests=false test
 
 🚧 Ограничения и дальнейшее развитие
