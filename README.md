@@ -159,7 +159,7 @@ GET /stats/rooms/popular — статистика популярности но�
 Локальные транзакции внутри сервисов (@Transactional)
 
 Двухшаговая логика бронирования:
-```sql
+
 PENDING → (hold в Hotel) → CONFIRM → CONFIRMED
 при сбое → RELEASE + CANCELLED
 
@@ -200,6 +200,7 @@ HotelHttpIT#adminCanCreateHotel — проверка CRUD
 HotelAvailabilityTests, HotelMoreTests — статистика и занятость
 
 Запуск всех тестов:
+
 ```bash
 mvn -q -DskipTests=false test
 
